@@ -1,63 +1,42 @@
-# Manual Humanizer
+# Manual Humanizer — Sentence-by-Sentence Writing Editor
 
-A small, fast browser app that helps you rewrite a piece of writing **sentence-by-sentence** so the final result feels naturally human — because you wrote it.
+A small browser app for revising text deliberately, one sentence at a time.
 
-No build step, no backend, no signup. Open `index.html` and go.
+**Built with:** HTML, CSS, JavaScript, browser localStorage, the Datamuse synonym API, and an optional OpenAI API integration.
 
 ## Features
+- Parse paragraphs into editable sentences
+- Compare original and revised versions
+- Track progress and navigate between sentences
+- Find synonyms through Datamuse
+- Optionally request AI-generated revisions with a user-provided API key
+- Save editing progress locally and export revised text
+- Switch light/dark themes
 
-- **Paste once, edit one sentence at a time** — paragraphs and sentence boundaries are detected automatically.
-- **Original-vs-yours reference** — always see the original sentence above the editor.
-- **Sentence list with progress bar** — jump between sentences; edited sentences are checkmarked.
-- **Click-to-rephrase dictionary** — every word in the current sentence is a clickable chip. Click a word to see synonyms (powered by the free [Datamuse API](https://www.datamuse.com/api/) — no API key needed) and click a synonym to swap it in.
-- **Auto-save to browser cache** — refresh-safe progress via `localStorage`.
-- **Light & dark themes**.
-- **Keyboard shortcuts**:
-  - `Ctrl/⌘ + ←` previous sentence
-  - `Ctrl/⌘ + →` save & next
-  - `Ctrl/⌘ + R` reset current sentence to original
-  - `Esc` close synonym popover
-- **Export** — copy to clipboard or download as `.txt`.
-
-## Run locally
-
-Just open `index.html` in any modern browser. That's it.
-
+## Local setup
 ```bash
-open index.html      # macOS
-xdg-open index.html  # Linux
-start index.html     # Windows
-```
-
-Or run a simple static server:
-
-```bash
+git clone https://github.com/TheRitikYadav/Manual-Humanizer.git
+cd Manual-Humanizer
 python3 -m http.server 8000
-# then visit http://localhost:8000
 ```
+Visit http://localhost:8000. There is no required build step.
 
-## Project structure
+## Architecture
+| File | Responsibility |
+| --- | --- |
+| `index.html` | Editing workspace and settings |
+| `app.js` | Sentence parsing, editor state, synonym lookup, AI requests |
+| `styles.css` | Responsive design and themes |
+| `manifest.json` | Web app metadata |
 
-```
-.
-├── index.html   # UI
-├── styles.css   # Theme + layout
-├── app.js       # Sentence parsing, editor logic, dictionary, cache
-└── README.md
-```
+## Privacy and security
 
-## How it works
+**This is not a fully offline application.** Draft text and preferences are stored in the current browser's localStorage. Individual words are sent to Datamuse when requesting synonyms. The optional AI rewrite feature sends the selected sentence and instructions to OpenAI when activated.
 
-1. Paste your full draft into the input area.
-2. The app splits it into paragraphs (blank-line separated) and sentences.
-3. You edit each sentence one at a time. Click any word to see synonyms; click a synonym to replace.
-4. The final output is rebuilt automatically, preserving paragraph structure.
-5. Copy or download when you're done.
+**Important:** The current optional AI integration stores a user-supplied API key in browser localStorage and makes requests from the browser. That approach is unsuitable for shared or untrusted devices and is not recommended for a production deployment. Use a securely authenticated backend proxy instead. Never embed a personal API key in deployed source code.
 
-## Privacy
+## Limitations
+The editor is a prototype without a backend account system. Browser-storage data can be cleared, and no automated reliability or security audit is claimed.
 
-Everything runs in your browser. Your text never leaves your device, except for individual word lookups sent to the public Datamuse API for synonyms.
-
-## License
-
-MIT
+## Next steps
+Move AI requests server-side, add automated tests and explicit data-retention controls.
